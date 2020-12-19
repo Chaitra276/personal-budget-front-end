@@ -738,7 +738,7 @@ class DataService {
         else {
             const token = localStorage.getItem('jwt');
             const headers = { 'content-type': 'application/json', 'Authorization': `Bearer ${token}` };
-            this.DataObservable = this.http.get('http://localhost:3000/budget').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["shareReplay"])());
+            this.DataObservable = this.http.get('https://grokonez-angular-appc.herokuapp.com/budget').pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["shareReplay"])());
             return this.DataObservable;
         }
     }
@@ -746,7 +746,7 @@ class DataService {
         const headers = { 'content-type': 'application/json' };
         const body = JSON.stringify(data);
         console.log(body);
-        return this.http.post('http://localhost:3000/budget', body, { 'headers': headers });
+        return this.http.post('https://grokonez-angular-appc.herokuapp.com/budget', body, { 'headers': headers });
     }
     generateRandomValue(start, end) {
         return Math.ceil(Math.random() * (end - start) + start);
@@ -768,7 +768,7 @@ class DataService {
     userSignUp(data) {
         const headers = { 'content-type': 'application/json' };
         const body = JSON.stringify(data);
-        return this.http.post('http://localhost:3000/users', body, { 'headers': headers });
+        return this.http.post('https://grokonez-angular-appc.herokuapp.com/users', body, { 'headers': headers });
     }
     invaliduser() {
         this.toastr.error("User does not exist. Please proceed to signup page", 'Error');
@@ -780,7 +780,7 @@ class DataService {
         const headers = { 'content-type': 'application/json' };
         const body = JSON.stringify(data);
         console.log(body);
-        return this.http.post('http://localhost:3000/auth', body, { 'headers': headers }).subscribe((res) => {
+        return this.http.post('https://grokonez-angular-appc.herokuapp.com/auth', body, { 'headers': headers }).subscribe((res) => {
             console.log(res);
             this.userRecord['username'] = data.username;
             this.userRecord['password'] = data.password;
