@@ -31,7 +31,7 @@ timerId: any;
 isOpenModel = new Subject<boolean>();
 userRecord = {};
 
-constructor(private http: HttpClient,public router: Router,private toastr:ToastrService) { 
+constructor(private http: HttpClient,public router: Router,private toastr:ToastrService) {
   this.isOpenModel.next(false);
 }
 
@@ -41,7 +41,7 @@ getData(): Observable<any> {
   } else {
     const token = localStorage.getItem('jwt');
     const headers = {'content-type': 'application/json','Authorization' : `Bearer ${token}`};
-    this.DataObservable = this.http.get('http://localhost:3000/budget').pipe(shareReplay());
+    this.DataObservable = this.http.get('https://grokonez-angular-appc.herokuapp.com/budget').pipe(shareReplay());
     return this.DataObservable;
   }
 }
@@ -50,7 +50,7 @@ addBudgetdata(data:BudgetSchema){
   const headers = {'content-type': 'application/json'};
   const body=JSON.stringify(data);
   console.log(body)
-  return this.http.post('http://localhost:3000/budget',body,{'headers':headers});
+  return this.http.post('https://grokonez-angular-appc.herokuapp.com/budget',body,{'headers':headers});
 }
 
 private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
@@ -65,7 +65,7 @@ private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
   }
 
   getData1(): Item[] {
-    
+
     const nbItems = this.generateRandomValue(this.MIN_ITEM, this.MAX_ITEM);
     console.log(nbItems);
     const samples = [];
@@ -82,7 +82,7 @@ private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
   userSignUp(data:UserSchema){
     const headers = {'content-type': 'application/json'};
     const body=JSON.stringify(data);
-    return this.http.post('http://localhost:3000/users',body,{'headers':headers});
+    return this.http.post('https://grokonez-angular-appc.herokuapp.com/users',body,{'headers':headers});
   }
 
   invaliduser(){
@@ -97,25 +97,25 @@ private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
     const headers = {'content-type': 'application/json'};
     const body=JSON.stringify(data);
     console.log(body)
-    return this.http.post('http://localhost:3000/auth',body,{'headers':headers}).subscribe((res:any)=>{
-      console.log(res);       
+    return this.http.post('https://grokonez-angular-appc.herokuapp.com/auth',body,{'headers':headers}).subscribe((res:any)=>{
+      console.log(res);
       this.userRecord['username'] = data.username;
       this.userRecord['password'] = data.password;
       console.log("user record is "+JSON.stringify(this.userRecord));
       localStorage.setItem('accessToken',res.token);
-          localStorage.setItem('refreshToken',res.refreshToken);      
-          localStorage.setItem('exp',res.exp);                 
-          this.isUserLoggedIn.next(true); 
-          this.router.navigate(['/homepage']);            
+          localStorage.setItem('refreshToken',res.refreshToken);
+          localStorage.setItem('exp',res.exp);
+          this.isUserLoggedIn.next(true);
+          this.router.navigate(['/homepage']);
           this.setTimer(true);
         },err=>{
             this.invaliduser();
         })
-    }    
+    }
 
     public getLoginStatus(): Observable<boolean> {
       return this.isUserLoggedIn;
-    }  
+    }
     public setTimer(flag){
       console.log("Timer set");
       if (flag){
@@ -125,7 +125,7 @@ private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
           const TokenNotExpired = expdate.valueOf() > new Date().valueOf();
           const lessThanTwentySecRemaining = expdate.valueOf() - new Date().valueOf() <= 20000;
           console.log(lessThanTwentySecRemaining);
-          if (TokenNotExpired && lessThanTwentySecRemaining) {                          
+          if (TokenNotExpired && lessThanTwentySecRemaining) {
             let message = confirm(
               'Your session is going to expire in 20 seconds! click OK to extend the session!'
             );
@@ -138,9 +138,9 @@ private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
             }else{
               message = false;
             }
-          }                         
+          }
           if (new Date().valueOf() >= expdate.valueOf()){
-            clearInterval(this.timerId);           
+            clearInterval(this.timerId);
             this.logout();
             console.log('clear interval');
     }
@@ -151,12 +151,12 @@ private readonly NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
     }
     public logout(): void {
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');   
+      localStorage.removeItem('refreshToken');
       this.isUserLoggedIn.next(false);
       this.router.navigate(['/login']);
-    } 
+    }
     verifyTokenPresence(){
       return !!localStorage.getItem('token');
     }
-    
+
 }
